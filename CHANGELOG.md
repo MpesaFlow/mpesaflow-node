@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.1 (2024-09-30)
+
+Full Changelog: [v0.0.1-alpha.1...v0.1.0-alpha.1](https://github.com/MpesaFlow/mpesaflow-node/compare/v0.0.1-alpha.1...v0.1.0-alpha.1)
+
+### Features
+
+* **api:** update via SDK Studio ([#11](https://github.com/MpesaFlow/mpesaflow-node/issues/11)) ([47f0a28](https://github.com/MpesaFlow/mpesaflow-node/commit/47f0a280b9d13c497305e45f3faef187a5675b20))
+
 ## 0.0.1-alpha.1 (2024-09-30)
 
 Full Changelog: [v0.0.1-alpha.0...v0.0.1-alpha.1](https://github.com/MpesaFlow/mpesaflow-node/compare/v0.0.1-alpha.0...v0.0.1-alpha.1)
