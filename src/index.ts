@@ -8,7 +8,7 @@ import * as API from './resources/index';
 
 const environments = {
   production: 'https://api.mpesaflow.com',
-  environment_1: 'https://sandbox-api.mpesaflow.com',
+  sandbox: 'https://sandbox-api.mpesaflow.com',
 };
 type Environment = keyof typeof environments;
 
@@ -23,7 +23,7 @@ export interface ClientOptions {
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mpesaflow.com`
-   * - `environment_1` corresponds to `https://sandbox-api.mpesaflow.com`
+   * - `sandbox` corresponds to `https://sandbox-api.mpesaflow.com`
    */
   environment?: Environment;
 
