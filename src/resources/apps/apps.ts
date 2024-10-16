@@ -1,9 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as AppsAPI from './apps';
 import * as APIKeysAPI from './api-keys';
+import { MyCursorIDPage, type MyCursorIDPageParams } from '../../pagination';
 
 export class Apps extends APIResource {
   apiKeys: APIKeysAPI.APIKeys = new APIKeysAPI.APIKeys(this._client);
@@ -18,8 +20,19 @@ export class Apps extends APIResource {
   /**
    * List all applications
    */
-  list(options?: Core.RequestOptions): Core.APIPromise<AppListResponse> {
-    return this._client.get('/apps/list', options);
+  list(
+    query?: AppListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ApplicationsMyCursorIDPage, Application>;
+  list(options?: Core.RequestOptions): Core.PagePromise<ApplicationsMyCursorIDPage, Application>;
+  list(
+    query: AppListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ApplicationsMyCursorIDPage, Application> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
+    return this._client.getAPIList('/apps/list', ApplicationsMyCursorIDPage, { query, ...options });
   }
 
   /**
@@ -29,6 +42,8 @@ export class Apps extends APIResource {
     return this._client.delete(`/apps/${appId}`, options);
   }
 }
+
+export class ApplicationsMyCursorIDPage extends MyCursorIDPage<Application> {}
 
 export interface Application {
   id?: string;
@@ -44,8 +59,6 @@ export interface AppCreateResponse {
   message?: string;
 }
 
-export type AppListResponse = Array<Application>;
-
 export interface AppDeleteResponse {
   message?: string;
 }
@@ -56,14 +69,20 @@ export interface AppCreateParams {
   name?: string;
 }
 
+export interface AppListParams extends MyCursorIDPageParams {}
+
 export namespace Apps {
   export import Application = AppsAPI.Application;
   export import AppCreateResponse = AppsAPI.AppCreateResponse;
-  export import AppListResponse = AppsAPI.AppListResponse;
   export import AppDeleteResponse = AppsAPI.AppDeleteResponse;
+  export import ApplicationsMyCursorIDPage = AppsAPI.ApplicationsMyCursorIDPage;
   export import AppCreateParams = AppsAPI.AppCreateParams;
+  export import AppListParams = AppsAPI.AppListParams;
   export import APIKeys = APIKeysAPI.APIKeys;
   export import APIKeyCreateResponse = APIKeysAPI.APIKeyCreateResponse;
+  export import APIKeyListResponse = APIKeysAPI.APIKeyListResponse;
   export import APIKeyDeleteResponse = APIKeysAPI.APIKeyDeleteResponse;
+  export import APIKeyListResponsesMyCursorIDPage = APIKeysAPI.APIKeyListResponsesMyCursorIDPage;
   export import APIKeyCreateParams = APIKeysAPI.APIKeyCreateParams;
+  export import APIKeyListParams = APIKeysAPI.APIKeyListParams;
 }
