@@ -50,6 +50,11 @@ describe('resource transactions', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.transactions.list({ appId: 'appId' });
+    const response = await client.transactions.list({
+      appId: 'appId',
+      ending_before: 'ending_before',
+      limit: 0,
+      starting_after: 'starting_after',
+    });
   });
 });

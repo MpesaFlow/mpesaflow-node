@@ -4,6 +4,7 @@ import * as Errors from './error';
 import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
+import * as Pagination from './pagination';
 import * as API from './resources/index';
 
 const environments = {
@@ -210,20 +211,25 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Mpesaflow {
   export import RequestOptions = Core.RequestOptions;
 
+  export import MyCursorIDPage = Pagination.MyCursorIDPage;
+  export import MyCursorIDPageParams = Pagination.MyCursorIDPageParams;
+  export import MyCursorIDPageResponse = Pagination.MyCursorIDPageResponse;
+
   export import HealthResponse = API.HealthResponse;
 
   export import Apps = API.Apps;
   export import Application = API.Application;
   export import AppCreateResponse = API.AppCreateResponse;
-  export import AppListResponse = API.AppListResponse;
   export import AppDeleteResponse = API.AppDeleteResponse;
+  export import ApplicationsMyCursorIDPage = API.ApplicationsMyCursorIDPage;
   export import AppCreateParams = API.AppCreateParams;
+  export import AppListParams = API.AppListParams;
 
   export import Transactions = API.Transactions;
   export import Transaction = API.Transaction;
   export import TransactionCreateResponse = API.TransactionCreateResponse;
   export import TransactionRetrieveResponse = API.TransactionRetrieveResponse;
-  export import TransactionListResponse = API.TransactionListResponse;
+  export import TransactionsMyCursorIDPage = API.TransactionsMyCursorIDPage;
   export import TransactionCreateParams = API.TransactionCreateParams;
   export import TransactionListParams = API.TransactionListParams;
 }

@@ -3,9 +3,10 @@
 export {
   Application,
   AppCreateResponse,
-  AppListResponse,
   AppDeleteResponse,
   AppCreateParams,
+  AppListParams,
+  ApplicationsMyCursorIDPage,
   Apps,
 } from './apps/apps';
 export { HealthResponse } from './top-level';
@@ -13,8 +14,8 @@ export {
   Transaction,
   TransactionCreateResponse,
   TransactionRetrieveResponse,
-  TransactionListResponse,
   TransactionCreateParams,
   TransactionListParams,
+  TransactionsMyCursorIDPage,
   Transactions,
 } from './transactions';

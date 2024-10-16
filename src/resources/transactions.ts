@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import * as Core from '../core';
 import * as TransactionsAPI from './transactions';
+import { MyCursorIDPage, type MyCursorIDPageParams } from '../pagination';
 
 export class Transactions extends APIResource {
   /**
@@ -31,10 +32,12 @@ export class Transactions extends APIResource {
   list(
     query: TransactionListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionListResponse> {
-    return this._client.get('/transactions/list', { query, ...options });
+  ): Core.PagePromise<TransactionsMyCursorIDPage, Transaction> {
+    return this._client.getAPIList('/transactions/list', TransactionsMyCursorIDPage, { query, ...options });
   }
 }
+
+export class TransactionsMyCursorIDPage extends MyCursorIDPage<Transaction> {}
 
 export interface Transaction {
   accountReference?: string;
@@ -66,8 +69,6 @@ export interface TransactionRetrieveResponse {
   transaction?: Transaction;
 }
 
-export type TransactionListResponse = Array<Transaction>;
-
 export interface TransactionCreateParams {
   accountReference?: string;
 
@@ -80,7 +81,7 @@ export interface TransactionCreateParams {
   transactionDesc?: string;
 }
 
-export interface TransactionListParams {
+export interface TransactionListParams extends MyCursorIDPageParams {
   appId: string;
 }
 
@@ -88,7 +89,7 @@ export namespace Transactions {
   export import Transaction = TransactionsAPI.Transaction;
   export import TransactionCreateResponse = TransactionsAPI.TransactionCreateResponse;
   export import TransactionRetrieveResponse = TransactionsAPI.TransactionRetrieveResponse;
-  export import TransactionListResponse = TransactionsAPI.TransactionListResponse;
+  export import TransactionsMyCursorIDPage = TransactionsAPI.TransactionsMyCursorIDPage;
   export import TransactionCreateParams = TransactionsAPI.TransactionCreateParams;
   export import TransactionListParams = TransactionsAPI.TransactionListParams;
 }
