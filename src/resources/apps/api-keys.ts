@@ -56,17 +56,7 @@ export interface APIKeyCreateResponse {
 }
 
 export interface APIKeyListResponse {
-  data?: Array<APIKeyListResponse.Data>;
-}
 
-export namespace APIKeyListResponse {
-  export interface Data {
-    id?: string;
-
-    applicationId?: string;
-
-    keyName?: string;
-  }
 }
 
 export interface APIKeyDeleteResponse {

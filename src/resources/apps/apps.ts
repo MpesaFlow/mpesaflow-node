@@ -40,17 +40,17 @@ export class Apps extends APIResource {
 }
 
 export interface Application {
-  id?: string;
+  id: string;
 
-  description?: string;
+  description: string;
 
-  name?: string;
+  name: string;
 }
 
 export interface AppCreateResponse {
-  applicationId?: string;
+  applicationId: string;
 
-  message?: string;
+  message: string;
 }
 
 export interface AppListResponse {
@@ -58,13 +58,13 @@ export interface AppListResponse {
 }
 
 export interface AppDeleteResponse {
-  message?: string;
+  message: string;
 }
 
 export interface AppCreateParams {
-  description?: string;
+  description: string;
 
-  name?: string;
+  name: string;
 }
 
 export interface AppListParams {
