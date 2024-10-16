@@ -4,17 +4,18 @@ import * as Errors from './error';
 import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
+import * as Pagination from './pagination';
 import * as API from './resources/index';
 
 const environments = {
   production: 'https://api.mpesaflow.com',
-  environment_1: 'https://sandbox-api.mpesaflow.com',
+  sandbox: 'https://sandbox-api.mpesaflow.com',
 };
 type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * The bearer token used for authentication
+   * Bearer token used for authentication
    */
   bearerToken?: string | undefined;
 
@@ -23,7 +24,7 @@ export interface ClientOptions {
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mpesaflow.com`
-   * - `environment_1` corresponds to `https://sandbox-api.mpesaflow.com`
+   * - `sandbox` corresponds to `https://sandbox-api.mpesaflow.com`
    */
   environment?: Environment;
 
@@ -95,7 +96,7 @@ export class Mpesaflow extends Core.APIClient {
   /**
    * API Client for interfacing with the Mpesaflow API.
    *
-   * @param {string | undefined} [opts.bearerToken=process.env['MPESAFLOW_BEARER_TOKEN'] ?? undefined]
+   * @param {string | undefined} [opts.bearerToken=process.env['BEARER_TOKEN'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MPESAFLOW_BASE_URL'] ?? https://api.mpesaflow.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -107,12 +108,12 @@ export class Mpesaflow extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MPESAFLOW_BASE_URL'),
-    bearerToken = Core.readEnv('MPESAFLOW_BEARER_TOKEN'),
+    bearerToken = Core.readEnv('BEARER_TOKEN'),
     ...opts
   }: ClientOptions = {}) {
     if (bearerToken === undefined) {
       throw new Errors.MpesaflowError(
-        "The MPESAFLOW_BEARER_TOKEN environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an bearerToken option, like new Mpesaflow({ bearerToken: 'My Bearer Token' }).",
+        "The BEARER_TOKEN environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an bearerToken option, like new Mpesaflow({ bearerToken: 'My Bearer Token' }).",
       );
     }
 
@@ -144,7 +145,13 @@ export class Mpesaflow extends Core.APIClient {
 
   apps: API.Apps = new API.Apps(this);
   transactions: API.Transactions = new API.Transactions(this);
-  health: API.Health = new API.Health(this);
+
+  /**
+   * Health check endpoint
+   */
+  health(options?: Core.RequestOptions): Core.APIPromise<string> {
+    return this.get('/health', { ...options, headers: { Accept: 'text/plain', ...options?.headers } });
+  }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -204,7 +211,14 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Mpesaflow {
   export import RequestOptions = Core.RequestOptions;
 
+  export import CursorIDPagination = Pagination.CursorIDPagination;
+  export import CursorIDPaginationParams = Pagination.CursorIDPaginationParams;
+  export import CursorIDPaginationResponse = Pagination.CursorIDPaginationResponse;
+
+  export import HealthResponse = API.HealthResponse;
+
   export import Apps = API.Apps;
+  export import Application = API.Application;
   export import AppCreateResponse = API.AppCreateResponse;
   export import AppListResponse = API.AppListResponse;
   export import AppDeleteResponse = API.AppDeleteResponse;
@@ -217,9 +231,6 @@ export namespace Mpesaflow {
   export import TransactionListResponse = API.TransactionListResponse;
   export import TransactionCreateParams = API.TransactionCreateParams;
   export import TransactionListParams = API.TransactionListParams;
-
-  export import Health = API.Health;
-  export import HealthRetrieveResponse = API.HealthRetrieveResponse;
 }
 
 export default Mpesaflow;
