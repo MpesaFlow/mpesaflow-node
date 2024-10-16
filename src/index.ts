@@ -211,9 +211,9 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Mpesaflow {
   export import RequestOptions = Core.RequestOptions;
 
-  export import MyCursorIDPage = Pagination.MyCursorIDPage;
-  export import MyCursorIDPageParams = Pagination.MyCursorIDPageParams;
-  export import MyCursorIDPageResponse = Pagination.MyCursorIDPageResponse;
+  export import CursorIDPagination = Pagination.CursorIDPagination;
+  export import CursorIDPaginationParams = Pagination.CursorIDPaginationParams;
+  export import CursorIDPaginationResponse = Pagination.CursorIDPaginationResponse;
 
   export import HealthResponse = API.HealthResponse;
 
@@ -221,15 +221,14 @@ export namespace Mpesaflow {
   export import Application = API.Application;
   export import AppCreateResponse = API.AppCreateResponse;
   export import AppDeleteResponse = API.AppDeleteResponse;
-  export import ApplicationsMyCursorIDPage = API.ApplicationsMyCursorIDPage;
+  export import ApplicationsCursorIDPagination = API.ApplicationsCursorIDPagination;
   export import AppCreateParams = API.AppCreateParams;
   export import AppListParams = API.AppListParams;
 
   export import Transactions = API.Transactions;
   export import Transaction = API.Transaction;
   export import TransactionCreateResponse = API.TransactionCreateResponse;
-  export import TransactionRetrieveResponse = API.TransactionRetrieveResponse;
-  export import TransactionsMyCursorIDPage = API.TransactionsMyCursorIDPage;
+  export import TransactionsCursorIDPagination = API.TransactionsCursorIDPagination;
   export import TransactionCreateParams = API.TransactionCreateParams;
   export import TransactionListParams = API.TransactionListParams;
 }

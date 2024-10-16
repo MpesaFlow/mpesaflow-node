@@ -3,7 +3,7 @@
 import { APIResource } from '../resource';
 import * as Core from '../core';
 import * as TransactionsAPI from './transactions';
-import { MyCursorIDPage, type MyCursorIDPageParams } from '../pagination';
+import { CursorIDPagination, type CursorIDPaginationParams } from '../pagination';
 
 export class Transactions extends APIResource {
   /**
@@ -19,10 +19,7 @@ export class Transactions extends APIResource {
   /**
    * Get transaction details
    */
-  retrieve(
-    transactionId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionRetrieveResponse> {
+  retrieve(transactionId: string, options?: Core.RequestOptions): Core.APIPromise<Transaction> {
     return this._client.get(`/transactions/${transactionId}`, options);
   }
 
@@ -32,14 +29,19 @@ export class Transactions extends APIResource {
   list(
     query: TransactionListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsMyCursorIDPage, Transaction> {
-    return this._client.getAPIList('/transactions/list', TransactionsMyCursorIDPage, { query, ...options });
+  ): Core.PagePromise<TransactionsCursorIDPagination, Transaction> {
+    return this._client.getAPIList('/transactions/list', TransactionsCursorIDPagination, {
+      query,
+      ...options,
+    });
   }
 }
 
-export class TransactionsMyCursorIDPage extends MyCursorIDPage<Transaction> {}
+export class TransactionsCursorIDPagination extends CursorIDPagination<Transaction> {}
 
 export interface Transaction {
+  id?: string;
+
   accountReference?: string;
 
   amount?: number;
@@ -65,10 +67,6 @@ export interface TransactionCreateResponse {
   transactionId?: string;
 }
 
-export interface TransactionRetrieveResponse {
-  transaction?: Transaction;
-}
-
 export interface TransactionCreateParams {
   accountReference?: string;
 
@@ -81,15 +79,14 @@ export interface TransactionCreateParams {
   transactionDesc?: string;
 }
 
-export interface TransactionListParams extends MyCursorIDPageParams {
+export interface TransactionListParams extends CursorIDPaginationParams {
   appId: string;
 }
 
 export namespace Transactions {
   export import Transaction = TransactionsAPI.Transaction;
   export import TransactionCreateResponse = TransactionsAPI.TransactionCreateResponse;
-  export import TransactionRetrieveResponse = TransactionsAPI.TransactionRetrieveResponse;
-  export import TransactionsMyCursorIDPage = TransactionsAPI.TransactionsMyCursorIDPage;
+  export import TransactionsCursorIDPagination = TransactionsAPI.TransactionsCursorIDPagination;
   export import TransactionCreateParams = TransactionsAPI.TransactionCreateParams;
   export import TransactionListParams = TransactionsAPI.TransactionListParams;
 }
