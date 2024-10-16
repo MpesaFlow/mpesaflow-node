@@ -23,8 +23,8 @@ The full API of this library can be found in [api.md](api.md).
 import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
-  bearerToken: process.env['MPESAFLOW_BEARER_TOKEN'], // This is the default and can be omitted
-  environment: 'environment_1', // defaults to 'production'
+  bearerToken: process.env['BEARER_TOKEN'], // This is the default and can be omitted
+  environment: 'sandbox', // defaults to 'production'
 });
 
 async function main() {
@@ -45,8 +45,8 @@ This library includes TypeScript definitions for all request params and response
 import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
-  bearerToken: process.env['MPESAFLOW_BEARER_TOKEN'], // This is the default and can be omitted
-  environment: 'environment_1', // defaults to 'production'
+  bearerToken: process.env['BEARER_TOKEN'], // This is the default and can be omitted
+  environment: 'sandbox', // defaults to 'production'
 });
 
 async function main() {

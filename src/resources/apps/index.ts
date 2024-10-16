@@ -9,6 +9,7 @@ export {
   APIKeys,
 } from './api-keys';
 export {
+  Application,
   AppCreateResponse,
   AppListResponse,
   AppDeleteResponse,
