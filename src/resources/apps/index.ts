@@ -6,7 +6,7 @@ export {
   APIKeyDeleteResponse,
   APIKeyCreateParams,
   APIKeyListParams,
-  APIKeyListResponsesMyCursorIDPage,
+  APIKeyListResponsesCursorIDPagination,
   APIKeys,
 } from './api-keys';
 export {
@@ -15,6 +15,6 @@ export {
   AppDeleteResponse,
   AppCreateParams,
   AppListParams,
-  ApplicationsMyCursorIDPage,
+  ApplicationsCursorIDPagination,
   Apps,
 } from './apps';
