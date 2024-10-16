@@ -38,6 +38,16 @@ describe('resource apps', () => {
     );
   });
 
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.apps.list(
+        { ending_before: 'ending_before', limit: 0, starting_after: 'starting_after' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Mpesaflow.NotFoundError);
+  });
+
   test('delete', async () => {
     const responsePromise = client.apps.delete('appId');
     const rawResponse = await responsePromise.asResponse();
