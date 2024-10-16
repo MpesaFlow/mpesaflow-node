@@ -65,11 +65,11 @@ export interface APIKeyCreateResponse {
 }
 
 export interface APIKeyListResponse {
-  id?: string;
+  id: string;
 
-  applicationId?: string;
+  applicationId: string;
 
-  keyName?: string;
+  keyName: string;
 }
 
 export interface APIKeyDeleteResponse {
