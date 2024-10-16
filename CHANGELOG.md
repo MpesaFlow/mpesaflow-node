@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 (2024-10-16)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/MpesaFlow/mpesaflow-node/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* Update publish-npm.yml ([a987d3e](https://github.com/MpesaFlow/mpesaflow-node/commit/a987d3e0b8e3fcce860b160fe6a4ba7d89e836e7))
+
 ## 1.0.0 (2024-10-16)
 
 Full Changelog: [v0.1.0-alpha.3...v1.0.0](https://github.com/MpesaFlow/mpesaflow-node/compare/v0.1.0-alpha.3...v1.0.0)
