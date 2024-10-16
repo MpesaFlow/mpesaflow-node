@@ -2,11 +2,11 @@
 
 import { AbstractPage, Response, APIClient, FinalRequestOptions, PageInfo } from './core';
 
-export interface MyCursorIDPageResponse<Item> {
-  my_data: Array<Item>;
+export interface CursorIDPaginationResponse<Item> {
+  data: Array<Item>;
 }
 
-export interface MyCursorIDPageParams {
+export interface CursorIDPaginationParams {
   starting_after?: string;
 
   ending_before?: string;
@@ -14,29 +14,29 @@ export interface MyCursorIDPageParams {
   limit?: number;
 }
 
-export class MyCursorIDPage<Item extends { id: string }>
+export class CursorIDPagination<Item extends { id: string }>
   extends AbstractPage<Item>
-  implements MyCursorIDPageResponse<Item>
+  implements CursorIDPaginationResponse<Item>
 {
-  my_data: Array<Item>;
+  data: Array<Item>;
 
   constructor(
     client: APIClient,
     response: Response,
-    body: MyCursorIDPageResponse<Item>,
+    body: CursorIDPaginationResponse<Item>,
     options: FinalRequestOptions,
   ) {
     super(client, response, body, options);
 
-    this.my_data = body.my_data || [];
+    this.data = body.data || [];
   }
 
   getPaginatedItems(): Item[] {
-    return this.my_data ?? [];
+    return this.data ?? [];
   }
 
   // @deprecated Please use `nextPageInfo()` instead
-  nextPageParams(): Partial<MyCursorIDPageParams> | null {
+  nextPageParams(): Partial<CursorIDPaginationParams> | null {
     const info = this.nextPageInfo();
     if (!info) return null;
     if ('params' in info) return info.params;
@@ -46,8 +46,8 @@ export class MyCursorIDPage<Item extends { id: string }>
   }
 
   nextPageInfo(): PageInfo | null {
-    const myData = this.getPaginatedItems();
-    if (!myData.length) {
+    const data = this.getPaginatedItems();
+    if (!data.length) {
       return null;
     }
 
@@ -55,7 +55,7 @@ export class MyCursorIDPage<Item extends { id: string }>
       typeof this.options.query === 'object' && 'ending_before' in (this.options.query || {})
     );
     if (isForwards) {
-      const id = myData[myData.length - 1]?.id;
+      const id = data[data.length - 1]?.id;
       if (!id) {
         return null;
       }
@@ -63,7 +63,7 @@ export class MyCursorIDPage<Item extends { id: string }>
       return { params: { starting_after: id } };
     }
 
-    const id = myData[0]?.id;
+    const id = data[0]?.id;
     if (!id) {
       return null;
     }
