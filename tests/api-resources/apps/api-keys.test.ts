@@ -20,6 +20,35 @@ describe('resource apiKeys', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('list', async () => {
+    const responsePromise = client.apps.apiKeys.list('appId');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('list: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.apps.apiKeys.list('appId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Mpesaflow.NotFoundError,
+    );
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.apps.apiKeys.list(
+        'appId',
+        { ending_before: 'ending_before', limit: 0, starting_after: 'starting_after' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Mpesaflow.NotFoundError);
+  });
+
   test('delete', async () => {
     const responsePromise = client.apps.apiKeys.delete('appId', 'apiKeyId');
     const rawResponse = await responsePromise.asResponse();
