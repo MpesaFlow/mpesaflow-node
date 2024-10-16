@@ -46,27 +46,27 @@ export class Apps extends APIResource {
 export class ApplicationsMyCursorIDPage extends MyCursorIDPage<Application> {}
 
 export interface Application {
-  id?: string;
+  id: string;
 
-  description?: string;
+  description: string;
 
-  name?: string;
+  name: string;
 }
 
 export interface AppCreateResponse {
-  applicationId?: string;
+  applicationId: string;
 
-  message?: string;
+  message: string;
 }
 
 export interface AppDeleteResponse {
-  message?: string;
+  message: string;
 }
 
 export interface AppCreateParams {
-  description?: string;
+  description: string;
 
-  name?: string;
+  name: string;
 }
 
 export interface AppListParams extends MyCursorIDPageParams {}
