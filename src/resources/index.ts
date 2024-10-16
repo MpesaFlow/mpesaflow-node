@@ -6,16 +6,15 @@ export {
   AppDeleteResponse,
   AppCreateParams,
   AppListParams,
-  ApplicationsMyCursorIDPage,
+  ApplicationsCursorIDPagination,
   Apps,
 } from './apps/apps';
 export { HealthResponse } from './top-level';
 export {
   Transaction,
   TransactionCreateResponse,
-  TransactionRetrieveResponse,
   TransactionCreateParams,
   TransactionListParams,
-  TransactionsMyCursorIDPage,
+  TransactionsCursorIDPagination,
   Transactions,
 } from './transactions';
