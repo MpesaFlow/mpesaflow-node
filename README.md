@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Mpesaflow REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [docs.mpesaflow.com](https://docs.mpesaflow.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.mpesaflow.com](https://docs.mpesaflow.com/). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
@@ -23,7 +23,7 @@ The full API of this library can be found in [api.md](api.md).
 import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
-  bearerToken: process.env['BEARER_TOKEN'], // This is the default and can be omitted
+  bearerToken: process.env['MPESAFLOW_API_TOKEN'], // This is the default and can be omitted
   environment: 'sandbox', // defaults to 'production'
 });
 
@@ -45,7 +45,7 @@ This library includes TypeScript definitions for all request params and response
 import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
-  bearerToken: process.env['BEARER_TOKEN'], // This is the default and can be omitted
+  bearerToken: process.env['MPESAFLOW_API_TOKEN'], // This is the default and can be omitted
   environment: 'sandbox', // defaults to 'production'
 });
 
