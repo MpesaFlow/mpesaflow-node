@@ -96,7 +96,7 @@ export class Mpesaflow extends Core.APIClient {
   /**
    * API Client for interfacing with the Mpesaflow API.
    *
-   * @param {string | undefined} [opts.bearerToken=process.env['BEARER_TOKEN'] ?? undefined]
+   * @param {string | undefined} [opts.bearerToken=process.env['MPESAFLOW_API_TOKEN'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MPESAFLOW_BASE_URL'] ?? https://api.mpesaflow.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -108,12 +108,12 @@ export class Mpesaflow extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MPESAFLOW_BASE_URL'),
-    bearerToken = Core.readEnv('BEARER_TOKEN'),
+    bearerToken = Core.readEnv('MPESAFLOW_API_TOKEN'),
     ...opts
   }: ClientOptions = {}) {
     if (bearerToken === undefined) {
       throw new Errors.MpesaflowError(
-        "The BEARER_TOKEN environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an bearerToken option, like new Mpesaflow({ bearerToken: 'My Bearer Token' }).",
+        "The MPESAFLOW_API_TOKEN environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an bearerToken option, like new Mpesaflow({ bearerToken: 'My Bearer Token' }).",
       );
     }
 
