@@ -195,14 +195,14 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['MPESAFLOW_BEARER_TOKEN'] = 'My Bearer Token';
+    process.env['MPESAFLOW_API_TOKEN'] = 'My Bearer Token';
     const client = new Mpesaflow();
     expect(client.bearerToken).toBe('My Bearer Token');
   });
 
   test('with overriden environment variable arguments', () => {
     // set options via env var
-    process.env['MPESAFLOW_BEARER_TOKEN'] = 'another My Bearer Token';
+    process.env['MPESAFLOW_API_TOKEN'] = 'another My Bearer Token';
     const client = new Mpesaflow({ bearerToken: 'My Bearer Token' });
     expect(client.bearerToken).toBe('My Bearer Token');
   });

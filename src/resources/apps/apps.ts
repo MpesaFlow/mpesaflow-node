@@ -39,6 +39,14 @@ export class Apps extends APIResource {
   }
 }
 
+export interface Application {
+  id?: string;
+
+  description?: string;
+
+  name?: string;
+}
+
 export interface AppCreateResponse {
   applicationId?: string;
 
@@ -46,17 +54,7 @@ export interface AppCreateResponse {
 }
 
 export interface AppListResponse {
-  data?: Array<AppListResponse.Data>;
-}
-
-export namespace AppListResponse {
-  export interface Data {
-    id?: string;
-
-    description?: string;
-
-    name?: string;
-  }
+  data?: Array<Application>;
 }
 
 export interface AppDeleteResponse {
@@ -87,6 +85,7 @@ export interface AppListParams {
 }
 
 export namespace Apps {
+  export import Application = AppsAPI.Application;
   export import AppCreateResponse = AppsAPI.AppCreateResponse;
   export import AppListResponse = AppsAPI.AppListResponse;
   export import AppDeleteResponse = AppsAPI.AppDeleteResponse;
