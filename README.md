@@ -136,6 +136,37 @@ On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
 
+## Auto-pagination
+
+List methods in the Mpesaflow API are paginated.
+You can use `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllTransactions(params) {
+  const allTransactions = [];
+  // Automatically fetches more pages as needed.
+  for await (const transaction of client.transactions.list({ appId: 'appId' })) {
+    allTransactions.push(transaction);
+  }
+  return allTransactions;
+}
+```
+
+Alternatively, you can make request a single page at a time:
+
+```ts
+let page = await client.transactions.list({ appId: 'appId' });
+for (const transaction of page.data) {
+  console.log(transaction);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = page.getNextPage();
+  // ...
+}
+```
+
 ## Advanced Usage
 
 ### Accessing raw Response data (e.g., headers)
