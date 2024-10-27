@@ -11,11 +11,8 @@ It is generated with [Stainless](https://www.stainlessapi.com/).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:stainless-sdks/mpesaflow-node.git
+npm install mpesaflow
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install mpesaflow`
 
 ## Usage
 
@@ -27,13 +24,13 @@ import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
   appAPIKey: process.env['APP_API_KEY'], // This is the default and can be omitted
-  environment: 'environment_1', // defaults to 'production'
+  environment: 'sandbox', // defaults to 'production'
 });
 
 async function main() {
-  const app = await client.apps.create();
+  const transaction = await client.transactions.create();
 
-  console.log(app.applicationId);
+  console.log(transaction.message);
 }
 
 main();
@@ -49,11 +46,11 @@ import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
   appAPIKey: process.env['APP_API_KEY'], // This is the default and can be omitted
-  environment: 'environment_1', // defaults to 'production'
+  environment: 'sandbox', // defaults to 'production'
 });
 
 async function main() {
-  const app: Mpesaflow.AppCreateResponse = await client.apps.create();
+  const transaction: Mpesaflow.TransactionCreateResponse = await client.transactions.create();
 }
 
 main();
@@ -70,7 +67,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const app = await client.apps.create().catch(async (err) => {
+  const transaction = await client.transactions.create().catch(async (err) => {
     if (err instanceof Mpesaflow.APIError) {
       console.log(err.status); // 400
       console.log(err.name); // BadRequestError
@@ -113,7 +110,7 @@ const client = new Mpesaflow({
 });
 
 // Or, configure per-request:
-await client.apps.create({
+await client.transactions.create({
   maxRetries: 5,
 });
 ```
@@ -130,7 +127,7 @@ const client = new Mpesaflow({
 });
 
 // Override per-request:
-await client.apps.create({
+await client.transactions.create({
   timeout: 5 * 1000,
 });
 ```
@@ -138,6 +135,37 @@ await client.apps.create({
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
+
+## Auto-pagination
+
+List methods in the Mpesaflow API are paginated.
+You can use `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllTransactions(params) {
+  const allTransactions = [];
+  // Automatically fetches more pages as needed.
+  for await (const transaction of client.transactions.list({ appId: 'appId' })) {
+    allTransactions.push(transaction);
+  }
+  return allTransactions;
+}
+```
+
+Alternatively, you can make request a single page at a time:
+
+```ts
+let page = await client.transactions.list({ appId: 'appId' });
+for (const transaction of page.data) {
+  console.log(transaction);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = page.getNextPage();
+  // ...
+}
+```
 
 ## Advanced Usage
 
@@ -151,13 +179,13 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mpesaflow();
 
-const response = await client.apps.create().asResponse();
+const response = await client.transactions.create().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: app, response: raw } = await client.apps.create().withResponse();
+const { data: transaction, response: raw } = await client.transactions.create().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(app.applicationId);
+console.log(transaction.message);
 ```
 
 ### Making custom/undocumented requests
@@ -220,7 +248,7 @@ import Mpesaflow from 'mpesaflow';
 ```
 
 To do the inverse, add `import "mpesaflow/shims/node"` (which does import polyfills).
-This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/stainless-sdks/mpesaflow-node/tree/main/src/_shims#readme)).
+This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/MpesaFlow/mpesaflow-node/tree/main/src/_shims#readme)).
 
 ### Logging and middleware
 
@@ -261,7 +289,7 @@ const client = new Mpesaflow({
 });
 
 // Override per-request:
-await client.apps.create({
+await client.transactions.create({
   httpAgent: new http.Agent({ keepAlive: false }),
 });
 ```
@@ -276,7 +304,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/mpesaflow-node/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/MpesaFlow/mpesaflow-node/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 
