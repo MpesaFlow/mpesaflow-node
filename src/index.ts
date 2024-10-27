@@ -4,31 +4,32 @@ import * as Errors from './error';
 import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
+import * as Pagination from './pagination';
 import * as API from './resources/index';
 
 const environments = {
   production: 'https://api.mpesaflow.com',
-  environment_1: 'https://sandbox-api.mpesaflow.com',
+  sandbox: 'https://sandbox-api.mpesaflow.com',
 };
 type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * The API key to access application-level functionalities.
+   * API key for application access
    */
-  appAPIKey?: string | undefined;
+  appAPIKey?: string | null | undefined;
 
   /**
-   * The API key to access root-level functionalities.
+   * API key for root access
    */
-  rootAPIKey?: string | undefined;
+  rootAPIKey?: string | null | undefined;
 
   /**
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mpesaflow.com`
-   * - `environment_1` corresponds to `https://sandbox-api.mpesaflow.com`
+   * - `sandbox` corresponds to `https://sandbox-api.mpesaflow.com`
    */
   environment?: Environment;
 
@@ -93,16 +94,16 @@ export interface ClientOptions {
  * API Client for interfacing with the Mpesaflow API.
  */
 export class Mpesaflow extends Core.APIClient {
-  appAPIKey: string;
-  rootAPIKey: string;
+  appAPIKey: string | null;
+  rootAPIKey: string | null;
 
   private _options: ClientOptions;
 
   /**
    * API Client for interfacing with the Mpesaflow API.
    *
-   * @param {string | undefined} [opts.appAPIKey=process.env['APP_API_KEY'] ?? undefined]
-   * @param {string | undefined} [opts.rootAPIKey=process.env['ROOT_API_KEY'] ?? undefined]
+   * @param {string | null | undefined} [opts.appAPIKey=process.env['APP_API_KEY'] ?? null]
+   * @param {string | null | undefined} [opts.rootAPIKey=process.env['ROOT_API_KEY'] ?? null]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MPESAFLOW_BASE_URL'] ?? https://api.mpesaflow.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -114,21 +115,10 @@ export class Mpesaflow extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MPESAFLOW_BASE_URL'),
-    appAPIKey = Core.readEnv('APP_API_KEY'),
-    rootAPIKey = Core.readEnv('ROOT_API_KEY'),
+    appAPIKey = Core.readEnv('APP_API_KEY') ?? null,
+    rootAPIKey = Core.readEnv('ROOT_API_KEY') ?? null,
     ...opts
   }: ClientOptions = {}) {
-    if (appAPIKey === undefined) {
-      throw new Errors.MpesaflowError(
-        "The APP_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an appAPIKey option, like new Mpesaflow({ appAPIKey: 'My App API Key' }).",
-      );
-    }
-    if (rootAPIKey === undefined) {
-      throw new Errors.MpesaflowError(
-        "The ROOT_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an rootAPIKey option, like new Mpesaflow({ rootAPIKey: 'My Root API Key' }).",
-      );
-    }
-
     const options: ClientOptions = {
       appAPIKey,
       rootAPIKey,
@@ -171,6 +161,26 @@ export class Mpesaflow extends Core.APIClient {
     };
   }
 
+  protected override validateHeaders(headers: Core.Headers, customHeaders: Core.Headers) {
+    if (this.appAPIKey && headers['x-app-api-key']) {
+      return;
+    }
+    if (customHeaders['x-app-api-key'] === null) {
+      return;
+    }
+
+    if (this.rootAPIKey && headers['x-root-api-key']) {
+      return;
+    }
+    if (customHeaders['x-root-api-key'] === null) {
+      return;
+    }
+
+    throw new Error(
+      'Could not resolve authentication method. Expected either appAPIKey or rootAPIKey to be set. Or for one of the "X-App-Api-Key" or "X-Root-Api-Key" headers to be explicitly omitted',
+    );
+  }
+
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
     const appAPIKeyAuth = this.appAPIKeyAuth(opts);
     const rootAPIKeyAuth = this.rootAPIKeyAuth(opts);
@@ -186,10 +196,16 @@ export class Mpesaflow extends Core.APIClient {
   }
 
   protected appAPIKeyAuth(opts: Core.FinalRequestOptions): Core.Headers {
+    if (this.appAPIKey == null) {
+      return {};
+    }
     return { 'X-App-Api-Key': this.appAPIKey };
   }
 
   protected rootAPIKeyAuth(opts: Core.FinalRequestOptions): Core.Headers {
+    if (this.rootAPIKey == null) {
+      return {};
+    }
     return { 'X-Root-Api-Key': this.rootAPIKey };
   }
 
@@ -236,17 +252,22 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Mpesaflow {
   export import RequestOptions = Core.RequestOptions;
 
+  export import CursorIDPagination = Pagination.CursorIDPagination;
+  export import CursorIDPaginationParams = Pagination.CursorIDPaginationParams;
+  export import CursorIDPaginationResponse = Pagination.CursorIDPaginationResponse;
+
   export import Apps = API.Apps;
+  export import Application = API.Application;
   export import AppCreateResponse = API.AppCreateResponse;
-  export import AppListResponse = API.AppListResponse;
   export import AppDeleteResponse = API.AppDeleteResponse;
+  export import ApplicationsCursorIDPagination = API.ApplicationsCursorIDPagination;
   export import AppCreateParams = API.AppCreateParams;
   export import AppListParams = API.AppListParams;
 
   export import Transactions = API.Transactions;
   export import Transaction = API.Transaction;
   export import TransactionCreateResponse = API.TransactionCreateResponse;
-  export import TransactionListResponse = API.TransactionListResponse;
+  export import TransactionsCursorIDPagination = API.TransactionsCursorIDPagination;
   export import TransactionCreateParams = API.TransactionCreateParams;
   export import TransactionListParams = API.TransactionListParams;
 }
