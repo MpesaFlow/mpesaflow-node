@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import * as Core from '../core';
 import * as TransactionsAPI from './transactions';
+import { CursorIDPagination, type CursorIDPaginationParams } from '../pagination';
 
 export class Transactions extends APIResource {
   /**
@@ -28,10 +29,15 @@ export class Transactions extends APIResource {
   list(
     query: TransactionListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionListResponse> {
-    return this._client.get('/transactions/list', { query, ...options });
+  ): Core.PagePromise<TransactionsCursorIDPagination, Transaction> {
+    return this._client.getAPIList('/transactions/list', TransactionsCursorIDPagination, {
+      query,
+      ...options,
+    });
   }
 }
+
+export class TransactionsCursorIDPagination extends CursorIDPagination<Transaction> {}
 
 export interface Transaction {
   id?: string;
@@ -61,10 +67,6 @@ export interface TransactionCreateResponse {
   transactionId?: string;
 }
 
-export interface TransactionListResponse {
-  data?: Array<Transaction>;
-}
-
 export interface TransactionCreateParams {
   accountReference?: string;
 
@@ -77,29 +79,14 @@ export interface TransactionCreateParams {
   transactionDesc?: string;
 }
 
-export interface TransactionListParams {
+export interface TransactionListParams extends CursorIDPaginationParams {
   appId: string;
-
-  /**
-   * Cursor for the previous page
-   */
-  ending_before?: string;
-
-  /**
-   * Number of items to return
-   */
-  limit?: number;
-
-  /**
-   * Cursor for the next page
-   */
-  starting_after?: string;
 }
 
 export namespace Transactions {
   export import Transaction = TransactionsAPI.Transaction;
   export import TransactionCreateResponse = TransactionsAPI.TransactionCreateResponse;
-  export import TransactionListResponse = TransactionsAPI.TransactionListResponse;
+  export import TransactionsCursorIDPagination = TransactionsAPI.TransactionsCursorIDPagination;
   export import TransactionCreateParams = TransactionsAPI.TransactionCreateParams;
   export import TransactionListParams = TransactionsAPI.TransactionListParams;
 }

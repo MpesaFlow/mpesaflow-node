@@ -259,15 +259,15 @@ export namespace Mpesaflow {
   export import Apps = API.Apps;
   export import Application = API.Application;
   export import AppCreateResponse = API.AppCreateResponse;
-  export import AppListResponse = API.AppListResponse;
   export import AppDeleteResponse = API.AppDeleteResponse;
+  export import ApplicationsCursorIDPagination = API.ApplicationsCursorIDPagination;
   export import AppCreateParams = API.AppCreateParams;
   export import AppListParams = API.AppListParams;
 
   export import Transactions = API.Transactions;
   export import Transaction = API.Transaction;
   export import TransactionCreateResponse = API.TransactionCreateResponse;
-  export import TransactionListResponse = API.TransactionListResponse;
+  export import TransactionsCursorIDPagination = API.TransactionsCursorIDPagination;
   export import TransactionCreateParams = API.TransactionCreateParams;
   export import TransactionListParams = API.TransactionListParams;
 }
