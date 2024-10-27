@@ -1,3 +1,13 @@
+# Mpesaflow
+
+Types:
+
+- <code><a href="./src/resources/top-level.ts">HealthResponse</a></code>
+
+Methods:
+
+- <code title="get /health">client.<a href="./src/index.ts">health</a>() -> HealthResponse</code>
+
 # Apps
 
 Types:
@@ -38,13 +48,3 @@ Methods:
 - <code title="post /transactions/create">client.transactions.<a href="./src/resources/transactions.ts">create</a>({ ...params }) -> TransactionCreateResponse</code>
 - <code title="get /transactions/{transactionId}">client.transactions.<a href="./src/resources/transactions.ts">retrieve</a>(transactionId) -> Transaction</code>
 - <code title="get /transactions/list">client.transactions.<a href="./src/resources/transactions.ts">list</a>({ ...params }) -> TransactionsCursorIDPagination</code>
-
-# Health
-
-Types:
-
-- <code><a href="./src/resources/health.ts">HealthRetrieveResponse</a></code>
-
-Methods:
-
-- <code title="get /health">client.health.<a href="./src/resources/health.ts">retrieve</a>() -> HealthRetrieveResponse</code>

@@ -9,7 +9,7 @@ export {
   ApplicationsCursorIDPagination,
   Apps,
 } from './apps/apps';
-export { HealthRetrieveResponse, Health } from './health';
+export { HealthResponse } from './top-level';
 export {
   Transaction,
   TransactionCreateResponse,
