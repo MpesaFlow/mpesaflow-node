@@ -1,13 +1,3 @@
-# Mpesaflow
-
-Types:
-
-- <code><a href="./src/resources/top-level.ts">HealthResponse</a></code>
-
-Methods:
-
-- <code title="get /health">client.<a href="./src/index.ts">health</a>() -> HealthResponse</code>
-
 # Apps
 
 Types:
