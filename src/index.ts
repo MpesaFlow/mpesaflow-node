@@ -6,7 +6,6 @@ import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Pagination from './pagination';
 import * as API from './resources/index';
-import * as TopLevelAPI from './resources/top-level';
 
 const environments = {
   production: 'https://api.mpesaflow.com',
@@ -151,13 +150,6 @@ export class Mpesaflow extends Core.APIClient {
   apps: API.Apps = new API.Apps(this);
   transactions: API.Transactions = new API.Transactions(this);
 
-  /**
-   * Check server health
-   */
-  health(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.HealthResponse> {
-    return this.get('/health', options);
-  }
-
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
   }
@@ -263,8 +255,6 @@ export namespace Mpesaflow {
   export import CursorIDPagination = Pagination.CursorIDPagination;
   export import CursorIDPaginationParams = Pagination.CursorIDPaginationParams;
   export import CursorIDPaginationResponse = Pagination.CursorIDPaginationResponse;
-
-  export import HealthResponse = API.HealthResponse;
 
   export import Apps = API.Apps;
   export import Application = API.Application;
