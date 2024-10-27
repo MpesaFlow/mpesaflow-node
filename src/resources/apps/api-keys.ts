@@ -65,7 +65,7 @@ export interface APIKeyCreateResponse {
 }
 
 export interface APIKeyListResponse {
-  id?: string;
+  id: string;
 
   applicationId?: string;
 

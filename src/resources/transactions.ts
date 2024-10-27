@@ -40,7 +40,7 @@ export class Transactions extends APIResource {
 export class TransactionsCursorIDPagination extends CursorIDPagination<Transaction> {}
 
 export interface Transaction {
-  id?: string;
+  id: string;
 
   accountReference?: string;
 
