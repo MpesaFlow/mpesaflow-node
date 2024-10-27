@@ -23,7 +23,7 @@ describe('instantiate client', () => {
     const client = new Mpesaflow({
       baseURL: 'http://localhost:5000/',
       defaultHeaders: { 'X-My-Default-Header': '2' },
-      bearerToken: 'My Bearer Token',
+      appAPIKey: 'My App API Key',
     });
 
     test('they are used in the request', () => {
@@ -55,7 +55,7 @@ describe('instantiate client', () => {
       const client = new Mpesaflow({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo' },
-        bearerToken: 'My Bearer Token',
+        appAPIKey: 'My App API Key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo');
     });
@@ -64,7 +64,7 @@ describe('instantiate client', () => {
       const client = new Mpesaflow({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo', hello: 'world' },
-        bearerToken: 'My Bearer Token',
+        appAPIKey: 'My App API Key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo&hello=world');
     });
@@ -73,7 +73,7 @@ describe('instantiate client', () => {
       const client = new Mpesaflow({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { hello: 'world' },
-        bearerToken: 'My Bearer Token',
+        appAPIKey: 'My App API Key',
       });
       expect(client.buildURL('/foo', { hello: undefined })).toEqual('http://localhost:5000/foo');
     });
@@ -82,7 +82,7 @@ describe('instantiate client', () => {
   test('custom fetch', async () => {
     const client = new Mpesaflow({
       baseURL: 'http://localhost:5000/',
-      bearerToken: 'My Bearer Token',
+      appAPIKey: 'My App API Key',
       fetch: (url) => {
         return Promise.resolve(
           new Response(JSON.stringify({ url, custom: true }), {
@@ -99,7 +99,7 @@ describe('instantiate client', () => {
   test('custom signal', async () => {
     const client = new Mpesaflow({
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-      bearerToken: 'My Bearer Token',
+      appAPIKey: 'My App API Key',
       fetch: (...args) => {
         return new Promise((resolve, reject) =>
           setTimeout(
@@ -126,7 +126,7 @@ describe('instantiate client', () => {
     test('trailing slash', () => {
       const client = new Mpesaflow({
         baseURL: 'http://localhost:5000/custom/path/',
-        bearerToken: 'My Bearer Token',
+        appAPIKey: 'My App API Key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
@@ -134,7 +134,7 @@ describe('instantiate client', () => {
     test('no trailing slash', () => {
       const client = new Mpesaflow({
         baseURL: 'http://localhost:5000/custom/path',
-        bearerToken: 'My Bearer Token',
+        appAPIKey: 'My App API Key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
@@ -144,25 +144,25 @@ describe('instantiate client', () => {
     });
 
     test('explicit option', () => {
-      const client = new Mpesaflow({ baseURL: 'https://example.com', bearerToken: 'My Bearer Token' });
+      const client = new Mpesaflow({ baseURL: 'https://example.com', appAPIKey: 'My App API Key' });
       expect(client.baseURL).toEqual('https://example.com');
     });
 
     test('env variable', () => {
       process.env['MPESAFLOW_BASE_URL'] = 'https://example.com/from_env';
-      const client = new Mpesaflow({ bearerToken: 'My Bearer Token' });
+      const client = new Mpesaflow({ appAPIKey: 'My App API Key' });
       expect(client.baseURL).toEqual('https://example.com/from_env');
     });
 
     test('empty env variable', () => {
       process.env['MPESAFLOW_BASE_URL'] = ''; // empty
-      const client = new Mpesaflow({ bearerToken: 'My Bearer Token' });
+      const client = new Mpesaflow({ appAPIKey: 'My App API Key' });
       expect(client.baseURL).toEqual('https://api.mpesaflow.com');
     });
 
     test('blank env variable', () => {
       process.env['MPESAFLOW_BASE_URL'] = '  '; // blank
-      const client = new Mpesaflow({ bearerToken: 'My Bearer Token' });
+      const client = new Mpesaflow({ appAPIKey: 'My App API Key' });
       expect(client.baseURL).toEqual('https://api.mpesaflow.com');
     });
 
@@ -170,46 +170,42 @@ describe('instantiate client', () => {
       process.env['MPESAFLOW_BASE_URL'] = 'https://example.com/from_env';
 
       expect(
-        () => new Mpesaflow({ bearerToken: 'My Bearer Token', environment: 'production' }),
+        () => new Mpesaflow({ appAPIKey: 'My App API Key', environment: 'production' }),
       ).toThrowErrorMatchingInlineSnapshot(
         `"Ambiguous URL; The \`baseURL\` option (or MPESAFLOW_BASE_URL env var) and the \`environment\` option are given. If you want to use the environment you must pass baseURL: null"`,
       );
 
-      const client = new Mpesaflow({
-        bearerToken: 'My Bearer Token',
-        baseURL: null,
-        environment: 'production',
-      });
+      const client = new Mpesaflow({ appAPIKey: 'My App API Key', baseURL: null, environment: 'production' });
       expect(client.baseURL).toEqual('https://api.mpesaflow.com');
     });
   });
 
   test('maxRetries option is correctly set', () => {
-    const client = new Mpesaflow({ maxRetries: 4, bearerToken: 'My Bearer Token' });
+    const client = new Mpesaflow({ maxRetries: 4, appAPIKey: 'My App API Key' });
     expect(client.maxRetries).toEqual(4);
 
     // default
-    const client2 = new Mpesaflow({ bearerToken: 'My Bearer Token' });
+    const client2 = new Mpesaflow({ appAPIKey: 'My App API Key' });
     expect(client2.maxRetries).toEqual(2);
   });
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['MPESAFLOW_API_TOKEN'] = 'My Bearer Token';
+    process.env['APP_API_KEY'] = 'My App API Key';
     const client = new Mpesaflow();
-    expect(client.bearerToken).toBe('My Bearer Token');
+    expect(client.appAPIKey).toBe('My App API Key');
   });
 
   test('with overriden environment variable arguments', () => {
     // set options via env var
-    process.env['MPESAFLOW_API_TOKEN'] = 'another My Bearer Token';
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token' });
-    expect(client.bearerToken).toBe('My Bearer Token');
+    process.env['APP_API_KEY'] = 'another My App API Key';
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key' });
+    expect(client.appAPIKey).toBe('My App API Key');
   });
 });
 
 describe('request building', () => {
-  const client = new Mpesaflow({ bearerToken: 'My Bearer Token' });
+  const client = new Mpesaflow({ appAPIKey: 'My App API Key' });
 
   describe('Content-Length', () => {
     test('handles multi-byte characters', () => {
@@ -251,7 +247,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token', timeout: 10, fetch: testFetch });
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key', timeout: 10, fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -281,7 +277,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token', fetch: testFetch, maxRetries: 4 });
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key', fetch: testFetch, maxRetries: 4 });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
 
@@ -305,7 +301,7 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token', fetch: testFetch, maxRetries: 4 });
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key', fetch: testFetch, maxRetries: 4 });
 
     expect(
       await client.request({
@@ -335,7 +331,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
     const client = new Mpesaflow({
-      bearerToken: 'My Bearer Token',
+      appAPIKey: 'My App API Key',
       fetch: testFetch,
       maxRetries: 4,
       defaultHeaders: { 'X-Stainless-Retry-Count': null },
@@ -367,7 +363,7 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token', fetch: testFetch, maxRetries: 4 });
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key', fetch: testFetch, maxRetries: 4 });
 
     expect(
       await client.request({
@@ -394,7 +390,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token', fetch: testFetch });
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -421,7 +417,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Mpesaflow({ bearerToken: 'My Bearer Token', fetch: testFetch });
+    const client = new Mpesaflow({ appAPIKey: 'My App API Key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);

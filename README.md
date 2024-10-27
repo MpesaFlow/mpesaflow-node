@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Mpesaflow REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [docs.mpesaflow.com](https://docs.mpesaflow.com/). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.mpesaflow.com](https://docs.mpesaflow.com). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
@@ -23,14 +23,14 @@ The full API of this library can be found in [api.md](api.md).
 import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
-  bearerToken: process.env['MPESAFLOW_API_TOKEN'], // This is the default and can be omitted
+  appAPIKey: process.env['APP_API_KEY'], // This is the default and can be omitted
   environment: 'sandbox', // defaults to 'production'
 });
 
 async function main() {
-  const app = await client.apps.create();
+  const transaction = await client.transactions.create();
 
-  console.log(app.applicationId);
+  console.log(transaction.message);
 }
 
 main();
@@ -45,12 +45,12 @@ This library includes TypeScript definitions for all request params and response
 import Mpesaflow from 'mpesaflow';
 
 const client = new Mpesaflow({
-  bearerToken: process.env['MPESAFLOW_API_TOKEN'], // This is the default and can be omitted
+  appAPIKey: process.env['APP_API_KEY'], // This is the default and can be omitted
   environment: 'sandbox', // defaults to 'production'
 });
 
 async function main() {
-  const app: Mpesaflow.AppCreateResponse = await client.apps.create();
+  const transaction: Mpesaflow.TransactionCreateResponse = await client.transactions.create();
 }
 
 main();
@@ -67,7 +67,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const app = await client.apps.create().catch(async (err) => {
+  const transaction = await client.transactions.create().catch(async (err) => {
     if (err instanceof Mpesaflow.APIError) {
       console.log(err.status); // 400
       console.log(err.name); // BadRequestError
@@ -110,7 +110,7 @@ const client = new Mpesaflow({
 });
 
 // Or, configure per-request:
-await client.apps.create({
+await client.transactions.create({
   maxRetries: 5,
 });
 ```
@@ -127,7 +127,7 @@ const client = new Mpesaflow({
 });
 
 // Override per-request:
-await client.apps.create({
+await client.transactions.create({
   timeout: 5 * 1000,
 });
 ```
@@ -148,13 +148,13 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mpesaflow();
 
-const response = await client.apps.create().asResponse();
+const response = await client.transactions.create().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: app, response: raw } = await client.apps.create().withResponse();
+const { data: transaction, response: raw } = await client.transactions.create().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(app.applicationId);
+console.log(transaction.message);
 ```
 
 ### Making custom/undocumented requests
@@ -258,7 +258,7 @@ const client = new Mpesaflow({
 });
 
 // Override per-request:
-await client.apps.create({
+await client.transactions.create({
   httpAgent: new http.Agent({ keepAlive: false }),
 });
 ```

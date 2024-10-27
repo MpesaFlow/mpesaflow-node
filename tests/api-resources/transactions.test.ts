@@ -4,7 +4,7 @@ import Mpesaflow from 'mpesaflow';
 import { Response } from 'node-fetch';
 
 const client = new Mpesaflow({
-  bearerToken: 'My Bearer Token',
+  appAPIKey: 'My App API Key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 

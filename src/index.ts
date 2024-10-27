@@ -15,9 +15,14 @@ type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * Bearer token used for authentication
+   * API key for application access
    */
-  bearerToken?: string | undefined;
+  appAPIKey?: string | null | undefined;
+
+  /**
+   * API key for root access
+   */
+  rootAPIKey?: string | null | undefined;
 
   /**
    * Specifies the environment to use for the API.
@@ -89,14 +94,16 @@ export interface ClientOptions {
  * API Client for interfacing with the Mpesaflow API.
  */
 export class Mpesaflow extends Core.APIClient {
-  bearerToken: string;
+  appAPIKey: string | null;
+  rootAPIKey: string | null;
 
   private _options: ClientOptions;
 
   /**
    * API Client for interfacing with the Mpesaflow API.
    *
-   * @param {string | undefined} [opts.bearerToken=process.env['MPESAFLOW_API_TOKEN'] ?? undefined]
+   * @param {string | null | undefined} [opts.appAPIKey=process.env['APP_API_KEY'] ?? null]
+   * @param {string | null | undefined} [opts.rootAPIKey=process.env['ROOT_API_KEY'] ?? null]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MPESAFLOW_BASE_URL'] ?? https://api.mpesaflow.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -108,17 +115,13 @@ export class Mpesaflow extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MPESAFLOW_BASE_URL'),
-    bearerToken = Core.readEnv('MPESAFLOW_API_TOKEN'),
+    appAPIKey = Core.readEnv('APP_API_KEY') ?? null,
+    rootAPIKey = Core.readEnv('ROOT_API_KEY') ?? null,
     ...opts
   }: ClientOptions = {}) {
-    if (bearerToken === undefined) {
-      throw new Errors.MpesaflowError(
-        "The MPESAFLOW_API_TOKEN environment variable is missing or empty; either provide it, or instantiate the Mpesaflow client with an bearerToken option, like new Mpesaflow({ bearerToken: 'My Bearer Token' }).",
-      );
-    }
-
     const options: ClientOptions = {
-      bearerToken,
+      appAPIKey,
+      rootAPIKey,
       ...opts,
       baseURL,
       environment: opts.environment ?? 'production',
@@ -140,18 +143,12 @@ export class Mpesaflow extends Core.APIClient {
 
     this._options = options;
 
-    this.bearerToken = bearerToken;
+    this.appAPIKey = appAPIKey;
+    this.rootAPIKey = rootAPIKey;
   }
 
   apps: API.Apps = new API.Apps(this);
   transactions: API.Transactions = new API.Transactions(this);
-
-  /**
-   * Health check endpoint
-   */
-  health(options?: Core.RequestOptions): Core.APIPromise<string> {
-    return this.get('/health', { ...options, headers: { Accept: 'text/plain', ...options?.headers } });
-  }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -164,8 +161,52 @@ export class Mpesaflow extends Core.APIClient {
     };
   }
 
+  protected override validateHeaders(headers: Core.Headers, customHeaders: Core.Headers) {
+    if (this.appAPIKey && headers['x-app-api-key']) {
+      return;
+    }
+    if (customHeaders['x-app-api-key'] === null) {
+      return;
+    }
+
+    if (this.rootAPIKey && headers['x-root-api-key']) {
+      return;
+    }
+    if (customHeaders['x-root-api-key'] === null) {
+      return;
+    }
+
+    throw new Error(
+      'Could not resolve authentication method. Expected either appAPIKey or rootAPIKey to be set. Or for one of the "X-App-Api-Key" or "X-Root-Api-Key" headers to be explicitly omitted',
+    );
+  }
+
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
-    return { Authorization: `Bearer ${this.bearerToken}` };
+    const appAPIKeyAuth = this.appAPIKeyAuth(opts);
+    const rootAPIKeyAuth = this.rootAPIKeyAuth(opts);
+
+    if (appAPIKeyAuth != null && !Core.isEmptyObj(appAPIKeyAuth)) {
+      return appAPIKeyAuth;
+    }
+
+    if (rootAPIKeyAuth != null && !Core.isEmptyObj(rootAPIKeyAuth)) {
+      return rootAPIKeyAuth;
+    }
+    return {};
+  }
+
+  protected appAPIKeyAuth(opts: Core.FinalRequestOptions): Core.Headers {
+    if (this.appAPIKey == null) {
+      return {};
+    }
+    return { 'X-App-Api-Key': this.appAPIKey };
+  }
+
+  protected rootAPIKeyAuth(opts: Core.FinalRequestOptions): Core.Headers {
+    if (this.rootAPIKey == null) {
+      return {};
+    }
+    return { 'X-Root-Api-Key': this.rootAPIKey };
   }
 
   static Mpesaflow = this;
@@ -214,8 +255,6 @@ export namespace Mpesaflow {
   export import CursorIDPagination = Pagination.CursorIDPagination;
   export import CursorIDPaginationParams = Pagination.CursorIDPaginationParams;
   export import CursorIDPaginationResponse = Pagination.CursorIDPaginationResponse;
-
-  export import HealthResponse = API.HealthResponse;
 
   export import Apps = API.Apps;
   export import Application = API.Application;
