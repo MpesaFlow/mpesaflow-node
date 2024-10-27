@@ -1,5 +1,3 @@
-# Mpesaflow
-
 # Apps
 
 Types:
