@@ -46,7 +46,7 @@ export class Apps extends APIResource {
 export class ApplicationsCursorIDPagination extends CursorIDPagination<Application> {}
 
 export interface Application {
-  id?: string;
+  id: string;
 
   description?: string;
 
