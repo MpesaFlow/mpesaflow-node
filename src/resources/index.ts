@@ -9,6 +9,7 @@ export {
   ApplicationsCursorIDPagination,
   Apps,
 } from './apps/apps';
+export { HealthRetrieveResponse, Health } from './health';
 export {
   Transaction,
   TransactionCreateResponse,

@@ -149,6 +149,7 @@ export class Mpesaflow extends Core.APIClient {
 
   apps: API.Apps = new API.Apps(this);
   transactions: API.Transactions = new API.Transactions(this);
+  health: API.Health = new API.Health(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -270,6 +271,9 @@ export namespace Mpesaflow {
   export import TransactionsCursorIDPagination = API.TransactionsCursorIDPagination;
   export import TransactionCreateParams = API.TransactionCreateParams;
   export import TransactionListParams = API.TransactionListParams;
+
+  export import Health = API.Health;
+  export import HealthRetrieveResponse = API.HealthRetrieveResponse;
 }
 
 export default Mpesaflow;
