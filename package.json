@@ -1,6 +1,6 @@
 {
   "name": "mpesaflow",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "description": "The official TypeScript library for the Mpesaflow API",
   "author": "Mpesaflow <evansso@mpesaflow.com>",
   "types": "dist/index.d.ts",
